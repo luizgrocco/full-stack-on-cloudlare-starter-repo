@@ -10,6 +10,7 @@ export function SiteHeader() {
     if (path === "/app") return "Dashboard";
     if (path === "/app/links") return "Links";
     if (path === "/app/create") return "Create Link";
+    if (path === "/app/evaluations") return "Evaluations";
     if (path.startsWith("/app/link/")) {
       return `Link`;
     }

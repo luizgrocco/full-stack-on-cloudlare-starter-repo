@@ -12,37 +12,31 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useLocation } from "@tanstack/react-router";
 
 export function NavMain() {
   const nav = useNavigate();
+  const location = useLocation();
 
   const items = [
     {
       title: "Dashboard",
-      navigate: () =>
-        nav({
-          to: "/app",
-        }),
+      path: "/app",
       icon: IconDashboard,
     },
     {
       title: "Links",
-      navigate: () =>
-        nav({
-          to: "/app/links",
-        }),
+      path: "/app/links",
       icon: IconLink,
     },
     {
       title: "Evaluations",
-      navigate: () =>
-        nav({
-          to: "/app/evaluations",
-        }),
+      path: "/app/evaluations",
       icon: IconReport,
     },
   ];
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <SidebarGroup>
@@ -50,13 +44,13 @@ export function NavMain() {
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-2">
             <SidebarMenuButton
-              onClick={() =>
-                nav({
-                  to: "/app/create",
-                })
-              }
+              onClick={() => nav({ to: "/app/create" })}
               tooltip="Quick Create"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
+              className={`min-w-8 duration-200 ease-linear ${
+                isActive("/app/create")
+                  ? "bg-primary text-primary-foreground" // no hover changes
+                  : "bg-transparent text-muted-foreground hover:bg-muted/50"
+              }`}
             >
               <IconCirclePlusFilled />
               <span>Create Link</span>
@@ -64,9 +58,17 @@ export function NavMain() {
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarMenu>
-          {items.map((item) => (
+          {items.map(item => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton onClick={item.navigate} tooltip={item.title}>
+              <SidebarMenuButton
+                onClick={() => nav({ to: item.path })}
+                tooltip={item.title}
+                className={`min-w-8 duration-200 ease-linear ${
+                  isActive(item.path)
+                    ? "bg-primary text-primary-foreground" // no hover changes
+                    : "bg-transparent text-muted-foreground hover:bg-muted/50"
+                }`}
+              >
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
               </SidebarMenuButton>
